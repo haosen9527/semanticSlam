@@ -1,0 +1,13 @@
+-
+    seq: 1
+    mag: [1,2,3]
+    classInfos:
+      person: 30.0
+      chair: 40.0
+
+-
+    seq: 2
+    mag: [1,2,3]
+    classInfos:
+      person: 30.0
+      chair: 40.0
