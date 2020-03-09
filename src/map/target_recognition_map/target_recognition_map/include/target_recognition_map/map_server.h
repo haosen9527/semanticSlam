@@ -33,11 +33,11 @@ public:
     mapServer(std::string mapname,bool savemapsucceed,int thresholdfree,int thresholdoccupied):
         mapName(mapname),saveMapSucceed(savemapsucceed),threshold_free(thresholdfree),threshold_occupied(thresholdoccupied)
     {
-            (*mapSub) = mapServerNH.subscribe("map",1,&mapServer::saveMap,this);
+            (*mapSub) = mapServerNH.subscribe("map_target",1,&mapServer::saveMap,this);
     }
     mapServer()
     {
-        *mapPub = mapServerNH.advertise<nav_msgs::OccupancyGrid>("map",1,true);
+        *mapPub = mapServerNH.advertise<nav_msgs::OccupancyGrid>("map_target",1,true);
         //loadMap();
     }
     ~mapServer();

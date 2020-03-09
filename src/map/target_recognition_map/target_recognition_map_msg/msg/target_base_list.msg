@@ -1,1 +1,2 @@
 target_recognition_map_msg/target_base[] classInfos
+geometry_msgs/Quaternion orientation

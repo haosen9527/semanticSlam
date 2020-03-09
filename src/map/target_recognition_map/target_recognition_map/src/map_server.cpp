@@ -58,12 +58,18 @@ void mapServer::saveMap(const target_recognition_map_msg::target_recognition_map
     FILE* target_yaml = fopen(trackTargetFile.c_str(),"a");
 //    ofstream target_yaml(trackTargetFile);
     std::string fprint_string = "-\n    seq: %d\n    mag: [%f,%f,%f]\n    classInfos:\n";
-    std::string classInfos = "      %s: %f\n";
-    fprintf(target_yaml,fprint_string.c_str(),
-            map->header.seq,yaw,pitch,roll);
-    for(int i=0;i<map->classInfos.size();i++)
+    std::string classInfos = "      %s:\n    x: %f\n    y:%f\n";
+//    map target recongation
+    for(int i=0;i<map->classInfosAllList.size();i++)
+    {
+      fprintf(target_yaml,fprint_string.c_str(),
+              map->header.seq,yaw,pitch,roll);
+      for(int j=0;j<map->classInfosAllList[i].classInfos.size();j++)
+      {
         fprintf(target_yaml,classInfos.c_str(),
-                map->classInfos[i].className,map->classInfos[i].position);
+                map->classInfosAllList[i].classInfos[j].className,map->classInfosAllList[i].classInfos[j].position.x ,map->classInfosAllList[i].classInfos[j].position.y);
+      }
+    }
     fclose(target_yaml);
 
     ROS_INFO("Done\n");

@@ -41,6 +41,10 @@
 #include "gmapping/gridfastslam/gridslamprocessor.h"
 #include "gmapping/sensor/sensor_base/sensor.h"
 
+#include "target_recognition_map_msg/target_recognition_map.h"
+#include "target_recognition_map_msg/target_base_list.h"
+
+
 #include <boost/thread.hpp>
 
 class SlamGMapping
@@ -61,10 +65,14 @@ class SlamGMapping
                      nav_msgs::GetMap::Response &res);
     void publishLoop(double transform_publish_period);
 
+    ///semantic/target_recognition_msg
+    void target_recognition_callback(const target_recognition_map_msg::target_base_list& target_recognition_msg);
+
   private:
     ros::NodeHandle node_;
     ros::Publisher entropy_publisher_;
     ros::Publisher sst_;
+    ros::Publisher sst_target;
     ros::Publisher sstm_;
     ros::ServiceServer ss_;
     tf::TransformListener tf_;
@@ -89,6 +97,10 @@ class SlamGMapping
 
     bool got_map_;
     nav_msgs::GetMap::Response map_;
+    //target map config
+    target_recognition_map_msg::target_base_list target_recognition_list;
+    target_recognition_map_msg::target_recognition_map map_target;
+    ros::Subscriber target_recognition_sub;
 
     ros::Duration map_update_interval_;
     tf::Transform map_to_odom_;

@@ -131,6 +131,9 @@ Initial map dimensions and resolution:
 #include "gmapping/sensor/sensor_range/rangesensor.h"
 #include "gmapping/sensor/sensor_odometry/odometrysensor.h"
 
+//target_recognition_map
+#include "target_recognition_map_msg/target_recognition_map.h"
+
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
 #include <boost/foreach.hpp>
@@ -270,6 +273,8 @@ void SlamGMapping::startLiveSlam()
 {
   entropy_publisher_ = private_nh_.advertise<std_msgs::Float64>("entropy", 1, true);
   sst_ = node_.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
+  sst_target = node_.advertise<target_recognition_map_msg::target_recognition_map>("map_target", 1, true);
+  target_recognition_sub = node_.subscribe("/semantic/target_recognition_msg",10,&SlamGMapping::target_recognition_callback,this);
   sstm_ = node_.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
   ss_ = node_.advertiseService("dynamic_map", &SlamGMapping::mapCallback, this);
   scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "scan", 5);
@@ -777,7 +782,16 @@ SlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
   map_.map.header.stamp = ros::Time::now();
   map_.map.header.frame_id = tf_.resolve( map_frame_ );
 
+
+  //target map
+  map_target.header = map_.map.header;
+  map_target.data = map_.map.data;
+  //map_target.classInfosAllList = target_recognition_list.classInfos;
+  //memcpy(map_target.classInfos,target_recognition_list.classInfos,sizeof(target_recognition_list.classInfos));
+  map_target.info = map_.map.info;
+
   sst_.publish(map_.map);
+  sst_target.publish(map_target);
   sstm_.publish(map_.map.info);
 }
 
@@ -801,4 +815,10 @@ void SlamGMapping::publishTransform()
   ros::Time tf_expiration = ros::Time::now() + ros::Duration(tf_delay_);
   tfB_->sendTransform( tf::StampedTransform (map_to_odom_, tf_expiration, map_frame_, odom_frame_));
   map_to_odom_mutex_.unlock();
+}
+
+void SlamGMapping::target_recognition_callback(const target_recognition_map_msg::target_base_list& target_recognition_msg)
+{
+  target_recognition_list = target_recognition_msg;
+  map_target.classInfosAllList.push_back(target_recognition_msg);
 }

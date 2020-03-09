@@ -53,6 +53,7 @@ find_package(catkin REQUIRED COMPONENTS
    target_recognition_map.msg
    target_base.msg
    target_base_list.msg
+   position.msg
  )
 
 ## Generate services in the 'srv' folder

@@ -1,2 +1,3 @@
 string className
-int32 position
+target_recognition_map_msg/position position
+

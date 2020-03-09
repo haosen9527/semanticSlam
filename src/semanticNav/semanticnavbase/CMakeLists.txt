@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   sensor_msgs
+  geometry_msgs
   tf
 )
 
@@ -151,7 +152,10 @@ add_executable(base_nav src/base_nav.cpp)
 target_link_libraries(base_nav
    ${catkin_LIBRARIES}
  )
-
+add_executable(foot_odom src/foot_odom.cpp)
+target_link_libraries(foot_odom
+    ${catkin_LIBRARIES}
+)
 #############
 ## Install ##
 #############

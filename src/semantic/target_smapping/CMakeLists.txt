@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   nav_msgs
+  tf
   target_recognition_map_msg
 )
 
